@@ -1,1 +1,50 @@
+create database Veterinaria;
+USE Veterinaria;
+create table Departamentos(
+Cod_Dep int primary key,
+Nombre varchar (100),
+Presupuesto int );
+ 
+
+
+create table Empleados(
+DNI varchar (8) primary key,
+Nombre varchar (100),
+Apellidos varchar (255),
+Departamento int,
+foreign key (Departamento) references Departamentos (Cod_Dep));
+
+
+insert into Departamentos (Cod_Dep,Nombre,Presupuesto)
+values 
+
+('01','Ventas','2000000'),
+('02','Administracion','1000000'),
+('03','Financiero','5000000'),
+('04','Recursos humanos','1000000'),
+('05','Investigacion','2000000'),
+('06','Compras','1000000'),
+('07','Recursos humanos','2000000'),
+('08','Ventas','1000000'),
+('09','Financiero','2000000'),
+('10','Compras','16000000');
+
+insert into Empleados(DNI,Nombre,Apellidos,Departamento)
+values 
+
+('11205559','Cristian', 'ryder','03'),
+('70053391','Julio',' lopez','09'),
+('52954700','Keren',' Gomez','06'),
+('10648579','Andres ',' Pooh','02'),
+('86958645','Ana',' Pineda','01'),
+('14657803','Luisa',' Linares','05'),
+('36054310','Mario',' Garcia','10'),
+('25648351','Jose',' Saul','04'),
+('12550474','Sonia',' Gavilan','07'),
+('12598844','Laura',' Murcia','01'),
+('34568714','Marly',' Mora','08');
+
+SELECT Apellidos
+FROM Empleados;
+
 
