@@ -448,4 +448,3 @@ go
 select idUsuario, noSeguidos, noSeguidores from USUARIOS
 exec seguirUsuario 34570500,42870562
 select idUsuario, noSeguidos, noSeguidores from USUARIOS
-
