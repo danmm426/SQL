@@ -1,50 +1,451 @@
-create database Veterinaria;
-USE Veterinaria;
-create table Departamentos(
-Cod_Dep int primary key,
-Nombre varchar (100),
-Presupuesto int );
- 
+create database tickeTime;
+go
+use tickeTime;
+go
+
+if OBJECT_ID('INTERACCIONES') is not null
+drop table INTERACCIONES;
+go
+if OBJECT_ID('QRASISTENCIA') is not null
+drop table QRASISTENCIA;
+go
+if OBJECT_ID('PROVEEDORDESERVICIOS') is not null
+drop table PROVEEDORDESERVICIOS;
+go
+if OBJECT_ID('SEGUIMIENTO') is not null
+drop table SEGUIMIENTO;
+go
+if OBJECT_ID('SERVICIOS') is not null
+drop table SERVICIOS;
+go
+if OBJECT_ID('COMPRASTICKETS') is not null
+drop table COMPRASTICKETS;
+go
+if OBJECT_ID('EVENTOS') is not null
+drop table EVENTOS;
+go
+if OBJECT_ID('USUARIOS') is not null
+drop table USUARIOS;
+go
+if OBJECT_ID('CATEGORIAS') is not null
+drop table CATEGORIAS;
+go
+create table USUARIOS(
+idUsuario int primary key not null,
+nombres nvarchar(30) not null,
+apellidos nvarchar(30) not null,
+usuario varchar(30) not null,
+pass varchar(10) not null,
+edad int not null,
+correo varchar(30) not null,
+rol varchar(20) not null,
+politicaData char(1) not null,
+noSeguidos int,
+razonSocial nvarchar (30),
+noSeguidores int
+);
+create table SERVICIOS(
+idServicios varchar (3) primary key not null,
+descripcion nvarchar(100) not null,
+);
+create table PROVEEDORDESERVICIOS(
+idOfertaServicio varchar (12) primary key not null,
+idProveedor int not null,
+servicio varchar(3) not null,
+descripcion varchar(200) not null,
+imagen image,
+foreign key (idProveedor) references USUARIOS (idUsuario),
+foreign key (servicio) references SERVICIOS (idServicios)
+);
+
+create table SEGUIMIENTO(
+idSeguimiento int identity primary key,
+seguido int not null,
+seguidor int not null,
+foreign key (seguido) references USUARIOS (idUsuario),
+foreign key (seguidor) references USUARIOS (idUsuario),
+);
+
+create table CATEGORIAS(
+idCategoria varchar (10) primary key not null,
+descripcion varchar (50) not null
+);
+
+create table EVENTOS(
+idEventos varchar (10) primary key not null,
+idOrganizador int not null,
+nomEvent nvarchar(30) not null,
+descripcion nvarchar(800) not null,
+lugar varchar(30) not null,
+modalidad varchar(30) not null,
+MedioTransm varchar(30),
+enlConexion varchar(50),
+Presentador varchar(50) not null,
+direccion varchar(50),
+fech_Ini date not null,
+hora_Ini varchar(5) not null,
+fech_Fin date not null,
+hora_Fin varchar(5) not null,
+intLucro varchar(30) not null,
+costo float not null,
+aforo int not null, 
+totalVendidos int not null,
+PlazasDisponibles int not null,
+ubicacion varchar (2),
+categoria varchar (10) not null,
+estado varchar (10) not null,
+img  image,
+numLikes int not null
+foreign key (idOrganizador) references USUARIOS (idusuario),
+foreign key (categoria) references CATEGORIAS (idCategoria),
+);
+
+create table COMPRASTICKETS(
+idCompras varchar (10) primary key not null,
+idEvento varchar(10) not null,
+comprador int not null,
+cant int,
+total float not null,
+foreign key (idEvento) references EVENTOS (idEventos),
+foreign key (comprador) references USUARIOS (idUsuario)
+);
+create table QRASISTENCIA(
+idQr varchar (10) primary key not null,
+transaccion varchar(10) not null,
+qr varchar (10) not null,
+asistencia char(1) not null,
+foreign key (transaccion) references COMPRASTICKETS (idCompras)
+);
+create table INTERACCIONES(
+idInteraccion varchar (10) primary key not null,
+qrAsistente varchar(10) not null,
+likeDisl char (1),
+comentarios varchar (500),
+compartidos int,
+foreign key (qrAsistente) references QRASISTENCIA (idQr)
+);
+go
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (53170834,'jose','ceron','Fais','pass0001',37,'joseceron@gmail.com','regular','1',0,'Universidad de la sabana',9);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (42870562,'Lopez','Agudelo','Egly','pass0002',50,'lopezagudelo@gmail.com','regular','1',4,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (75076432,'Garcia','Aguirre','Hohn','pass0003',48,'garciaaguirre@gmail.com','regular','1',1,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10537683,'Lopez','Alban','Abisted','pass0004',31,'lopezalban@gmail.com','proveedor','1',0,'logistica music s.a.s',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (76288230,'Fernandez','Alegria','Abeneiber','pass0005',26,'fernandezalegria@gmail.com','proveedor','1',1,'Luces, musica y farra LTDA',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (76317155,'Velasquez','Alegria','Alfer Wali','pass0006',39,'velasquezalegria@gmail.com','proveedor','1',1,'buffets elegantes C.I.A',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10536636,'Jaramillo','Alvarez','Ali Duvaam','pass0007',20,'jaramilloalvarez@gmail.com','regular','1',1,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (41733718,'Vejarano','Alvarez','Ali Yunior','pass0008',26,'vejaranoalvarez@gmail.com','regular','1',2,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (4613691,'Ortega','Alvear','usserOrAl46','pass0009',50,'ortegaalvear@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (34538776,'Camayo','Alzate','usserCaAl34','pass0010',71,'camayoalzate@gmail.com','regular','1',0,'latino Show music Club',11);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10545657,'Cabrera','Anaya','usserCaAn10','pass0011',79,'cabreraanaya@elpirata.com','regular','1',1,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10529900,'Jorge','Caldas','usserJoCa10','pass0012',56,'jorgecaldas@gmail.com','regular','1',2,'DevTernity',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10527966,'Jesus','Ramirez','usserJeRa10','pass0013',90,'jesusramirez@gmail.com','regular','1',1,'Calibre da Liberdade',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (263364,'Luis','Suarez','usserLuSu26','pass0014',18,'luissuarez@gmail.com','proveedor','1',1,'juegos y espectaculos S.A.S',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (76306105,'Henry','Escobar','usserHeEs76','pass0015',61,'henryescobar@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (34551703,'Beatriz','Sanchez','usserBeSa34','pass0016',95,'beatrizsanchez@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (34558659,'Clara','Cortes','usserClCo34','pass0017',67,'claracortes@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (76324843,'Hugo','Ceron','usserHuCe76','pass0018',57,'hugoceron@gmail.com','proveedor','1',0,'falandodelas',6);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (25277918,'Gloria','Fernandez','usserGlFe25','pass0019',52,'gloriafernandez@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10533149,'Jose','Vidal','usserJoVi10','pass0020',29,'josevidal@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (18125465,'Wilson','Rosero','usserWiRo18','pass0021',89,'wilsonrosero@gmail.com','proveedor','1',0,'andamosOrganized',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10541455,'Hugo','Velasco','usserHuVe10','pass0022',23,'hugovelasco@gmail.com','regular','1',1,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (48600072,'Sandra','Collazos','usserSaCo48','pass0023',19,'sandracollazos@gmail.com','proveedor','1',0,'produccion y videos',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (41573309,'Maria','Lugo','usserMaLu41','pass0024',82,'marialugo@gmail.com','proveedor','1',2,'estructuras y andamios',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (31213007,'Maria','Alegria','usserMaAl31','pass0025',23,'mariaalegria@gmail.com','proveedor','1',0,'parques inflables S.A',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (16738295,'Ricardo','Benitez','usserRiBe16','pass0026',65,'ricardobenitez@gmail.com','regular','1',1,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (6760943,'Oscar','Castillo','usserOsCa67','pass0027',98,'oscarcastillo@gmail.com','regular','1',2,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10533156,'Luis','Andrade','usserLuAn10','pass0028',30,'luisandrade@gmail.com','proveedor','1',2,'Gringo Tuesdays',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (87246681,'Hector','Palacios','usserHePa87','pass0029',32,'hectorpalacios@gmail.com','regular','1',1,'Teatro Villa Mayor',8);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (12976097,'Gilberto','Pantoja','usserGiPa12','pass0030',42,'gilbertopantoja@gmail.com','proveedor','1',1,'espacios media torta LTDA',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (34564081,'Gloria','Solano','usserGlSo34','pass0031',22,'gloriasolano@gmail.com','proveedor','1',1,'recuerdos de antanio',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10548116,'Jaime','Solarte','usserJaSo10','pass0032',80,'jaimesolarte@gmail.com','proveedor','1',2,'Bomberos dance S.A',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (45766496,'Martha','Lobato','usserMaLo45','pass0033',81,'marthalobato@gmail.com','regular','1',1,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (31946378,'Luz','Marinez','usserLuMa31','pass0034',32,'luzmarinez@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10545987,'Silvio','Gomez','usserSiGo10','pass0035',64,'silviogomez@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (34531233,'Josefina','Munoz','usserJoMu34','pass0036',88,'josefinamunoz@gmail.com','regular','1',0,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10525832,'Gerardo','Ceron','usserGeCe10','pass0037',88,'gerardoceron@gmail.com','proveedor','1',0,'Gerardo Ceron C.I.A',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (4611335,'Jose','Elvira','usserJoEl46','pass0038',57,'joseelvira@gmail.com','regular','1',1,'',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (41640024,'Isabel','Realpe','usserIsRe41','pass0039',36,'isabelrealpe@gmail.com','proveedor','1',1,'Entretenimientos Infantiles',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (10295280,'Jesus','Teran','usserJeTe10','pass0040',19,'jesusteran@gmail.com','proveedor','1',2,'asesores y programas',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (34537236,'Adriana','Lopez','usserAdLo34','pass0041',56,'adrianalopez@gmail.com','proveedor','1',1,'prisma Gestion',0);
+insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) values (34570500,'Monica','Quina','usserMoQu34','pass0042',99,'monicaquina@gmail.com','proveedor','1',0,'alimentos express',0);
+
+insert into SERVICIOS (idServicios,descripcion) values ('S1','Servicios de bufett y/o alimentos');
+insert into SERVICIOS (idServicios,descripcion) values ('A2','Alquiler de logistica, programacion de actividades');
+insert into SERVICIOS (idServicios,descripcion) values ('A3','Alquiler de tarimas separadores  y estructuras');
+insert into SERVICIOS (idServicios,descripcion) values ('S4','Servicios de entretenimiento infantil titeres');
+insert into SERVICIOS (idServicios,descripcion) values ('S5','Servicios de entretenimiento infantil payasos y mimos');
+insert into SERVICIOS (idServicios,descripcion) values ('S6','Servicios de coreografias');
+insert into SERVICIOS (idServicios,descripcion) values ('S7','Servicios de minitecas');
+insert into SERVICIOS (idServicios,descripcion) values ('S8','Servicios de DJ');
+insert into SERVICIOS (idServicios,descripcion) values ('A9','Alquiler de Instalacion de equipos musicales, soniod  y/o video');
+insert into SERVICIOS (idServicios,descripcion) values ('A10','Alquiler de juegos inflables');
+insert into SERVICIOS (idServicios,descripcion) values ('A11','Alquiler de piscinas portatiles para parques');
+insert into SERVICIOS (idServicios,descripcion) values ('A12','Alquiler de espacios');
+insert into SERVICIOS (idServicios,descripcion) values ('S13','Servicios de decoracion');
+
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('10537683A2',10537683,'A2','Animate por logistica music s.a.s, somos lo mejor en Alquiler de logistica, programacion de actividades y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('10537683S9',10537683,'S8','Animate por logistica music s.a.s, somos lo mejor en Servicios de DJ y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('76288230A3',76288230,'A3','Animate por Luces, musica y farra LTDA, somos lo mejor en Alquiler de tarimas separadores  y estructuras y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('76288230S9',76288230,'S8','Animate por Luces, musica y farra LTDA, somos lo mejor en Servicios de DJ y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('76288230S8',76288230,'S7','Animate por Luces, musica y farra LTDA, somos lo mejor en Servicios de minitecas y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('76317155S1',76317155,'S1','Animate por buffets elegantes C.I.A, somos lo mejor en Servicios de bufett y/o alimentos y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('76317155A13',76317155,'A12','Animate por buffets elegantes C.I.A, somos lo mejor en Alquiler de espacios y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('263364S5',263364,'S5','Animate por juegos y espectaculos S.A.S, somos lo mejor en Servicios de entretenimiento infantil payasos y mimos y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('263364S9',263364,'S8','Animate por juegos y espectaculos S.A.S, somos lo mejor en Servicios de DJ y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('263364S6',263364,'S6','Animate por juegos y espectaculos S.A.S, somos lo mejor en Servicios de coreografias y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('263364A10',263364,'A9','Animate por juegos y espectaculos S.A.S, somos lo mejor en Alquiler de Instalacion de equipos musicales, soniod  y/o video y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('76324843S8',76324843,'S7','Animate por falandodelas, somos lo mejor en Servicios de minitecas y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('18125465A2',18125465,'A2','Animate por andamosOrganized, somos lo mejor en Alquiler de logistica, programacion de actividades y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('18125465A3',18125465,'A3','Animate por andamosOrganized, somos lo mejor en Alquiler de tarimas separadores  y estructuras y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('48600072A10',48600072,'A10','Animate por produccion y videos, somos lo mejor en Alquiler de Instalacion de equipos musicales, soniod  y/o video y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('41573309A3',41573309,'A3','Animate por estructuras y andamios, somos lo mejor en Alquiler de tarimas separadores  y estructuras y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('41573309S9',41573309,'S8','Animate por estructuras y andamios, somos lo mejor en Servicios de DJ y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('41573309A10',41573309,'A9','Animate por estructuras y andamios, somos lo mejor en Alquiler de Instalacion de equipos musicales, soniod  y/o video y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('31213007A11',31213007,'A10','Animate por parques inflables S.A, somos lo mejor en Alquiler de juegos inflables y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('31213007A12',31213007,'A11','Animate por parques inflables S.A, somos lo mejor en Alquiler de piscinas portatiles para parques y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('10533156S8',10533156,'S7','Animate por Gringo Tuesdays, somos lo mejor en Servicios de minitecas y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('12976097A13',12976097,'A12','Animate por espacios media torta LTDA, somos lo mejor en Alquiler de espacios y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('34564081S8',34564081,'S7','Animate por recuerdos de antanio, somos lo mejor en Servicios de minitecas y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('10548116A2',10548116,'A2','Animate por Bomberos dance S.A, somos lo mejor en Alquiler de logistica, programacion de actividades y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('10525832A3',10525832,'A3','Animate por Gerardo Ceron C.I.A, somos lo mejor en Alquiler de tarimas separadores, estructuras y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('41640024S5',41640024,'S5','Animate por Entretenimientos Infantiles, somos lo mejor en Servicios de entretenimiento infantil payasos y mimos y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('41640024S4',41640024,'S4','Animate por Entretenimientos Infantiles, somos lo mejor en Servicios de entretenimiento infantil titeres y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('10295280A2',10295280,'A2','Animate por asesores y programas, somos lo mejor en Alquiler de logistica, programacion de actividades y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('34537236A2',34537236,'A2','Animate por prisma Gestion, somos lo mejor en Alquiler de logistica, programacion de actividades y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('34570500A14',34570500,'S13','Animate por alimentos express, somos lo mejor en Servicios de decoracion y mucho mas!!!','');
+insert into PROVEEDORDESERVICIOS (idOfertaServicio,idProveedor,servicio,descripcion,imagen) values ('34570500A13',34570500,'S1','Animate por alimentos express, somos lo mejor en Alquiler de espacios y mucho mas!!!','');
+
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,10533156);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,87246681);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,41733718);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,34564081);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,10548116);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,45766496);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,10541455);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,6760943);
+insert into SEGUIMIENTO (seguido,seguidor) values (53170834,42870562);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,42870562);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,75076432);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,12976097);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,76288230);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,76317155);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,10536636);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,41733718);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,6760943);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,10545657);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,10529900);
+insert into SEGUIMIENTO (seguido,seguidor) values (34538776,10527966);
+insert into SEGUIMIENTO (seguido,seguidor) values (76324843,41573309);
+insert into SEGUIMIENTO (seguido,seguidor) values (76324843,10548116);
+insert into SEGUIMIENTO (seguido,seguidor) values (76324843,16738295);
+insert into SEGUIMIENTO (seguido,seguidor) values (76324843,10529900);
+insert into SEGUIMIENTO (seguido,seguidor) values (76324843,10295280);
+insert into SEGUIMIENTO (seguido,seguidor) values (76324843,42870562);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,4611335);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,41640024);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,10295280);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,42870562);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,41573309);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,263364);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,34537236);
+insert into SEGUIMIENTO (seguido,seguidor) values (87246681,10533156);
+
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0001','musica');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0002','negocios');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0003','gastronomia');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0004','artes');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0005','cine y medios de comunicacion');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0006','deportes y salud');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0007','ciencia y tecnologia');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0008','actividades al aire libre');
+insert into CATEGORIAS (idCategoria,descripcion) values ('CTG0009','educacion');
+
+insert into EVENTOS (idEventos,idOrganizador,nomEvent,descripcion,lugar,modalidad,MedioTransm,enlConexion,Presentador,direccion,fech_Ini,hora_Ini,fech_Fin,hora_Fin,intLucro,costo,aforo,totalVendidos,PlazasDisponibles,ubicacion,categoria,estado,img,numLikes) values ('EVPR3345',34538776,'','EPAM is a leading global provider of digital platform engineering and development services with 58,000+ employees present in 40+ countries across the globe.','Bogota','Presencial','','','grupo niche','Carrera  21 # 17 -63','2022-03-27','07:00','2022-03-29','11:00','Pago',6248,230,25,205,'','CTG0007','Disponible','23409.img',5);
+insert into EVENTOS (idEventos,idOrganizador,nomEvent,descripcion,lugar,modalidad,MedioTransm,enlConexion,Presentador,direccion,fech_Ini,hora_Ini,fech_Fin,hora_Fin,intLucro,costo,aforo,totalVendidos,PlazasDisponibles,ubicacion,categoria,estado,img,numLikes) values ('EVPR3346',34538776,'','Latino Music Group reunirá a los más importantes sellos disqueros, artistas, medios de comunicación, publicistas, managers, plataformas digitales y empresarios del SHOWBUSINESS en la 12a edición de Latino Music Conference, la convención anual de la industria de la música latina de COLOMBIA que llega, con su TOUR 2022 con el cual estará presente en mas de 10 ciudades de Colombia y en el mercado internacional. Este año la convención presentará paneles con 10 conferencias congregando a más de 1200 personalidades destacadas de la industria de la música de Colombia y del mercado U.S Latín quienes estarán presentes en este gran evento de NETWORKING. LATINO MUSIC es una plataforma de NETWORKING y promoción para artistas en Colombia, que congrega a todos las diferentes personalidades de la indu','Bogota','Presencial','','','fruko & sus tesos','Carrera 42 # 54-77 Barrio El Recreo','2022-04-12','12:30','2022-04-13','15:00','Pago',5746,120,47,73,'','CTG0001','Disponible','23469.img',2);
+insert into EVENTOS (idEventos,idOrganizador,nomEvent,descripcion,lugar,modalidad,MedioTransm,enlConexion,Presentador,direccion,fech_Ini,hora_Ini,fech_Fin,hora_Fin,intLucro,costo,aforo,totalVendidos,PlazasDisponibles,ubicacion,categoria,estado,img,numLikes) values ('EVVR3347',87246681,'','Sabemos lo que estás pensando ahora, sí, quieres vivir fuera del país, viajar, conocer personas nuevas, salir de la rutina y tener una experiencia llena de aprendizajes y retos. Desde hace mucho tiempo te ronda un pensamiento en la cabeza: ¿cómo puedo hacerlo?, ¿por dónde comienzo?, ¿cómo lo voy a lograr?¡No estás sol@! Llegó el evento en donde descubrirás las respuestas a esas preguntas, donde encontrarás todo en un solo lugar y en el que conocerás un equipo en quien confiar para hacer tu sueño realidad: ¡Viajar, vivir y estudiar en el exterior!','Bogota','virtual','zoom','https://conect.zoom.us//SIP/H.323','agustin laje','','2022-04-02','10:00','2022-04-02','13:00','Libre',0,150,126,24,'','CTG0009','Disponible','234r9.img',2);
+insert into EVENTOS (idEventos,idOrganizador,nomEvent,descripcion,lugar,modalidad,MedioTransm,enlConexion,Presentador,direccion,fech_Ini,hora_Ini,fech_Fin,hora_Fin,intLucro,costo,aforo,totalVendidos,PlazasDisponibles,ubicacion,categoria,estado,img,numLikes) values ('EVPR3348',76324843,'','¡Únase a nosotros para disfrutar de ideas, la comunidad y quizás lo más importante, cómo ayudarnos a acelerar nuestros negocios!Ven y escucha a los dueños de negocios y aprende cómo superar los desafíos de crecimiento. Cada mes fomentamos #GiveFirst #DarPrimero en Bogotá y brindamos una plataforma para que la próxima generación de dueños de negocio compartan su sabiduría colectiva para acelerar nuestro éxito comercial.','Bogota','Presencial','','','emmanuel danann','Calle 100 # 11B-27 Bogotá','2022-04-19','09:30','2022-04-21','14:00','Pago',6429,100,26,74,'','CTG0002','Disponible','23407.img',7);
+insert into EVENTOS (idEventos,idOrganizador,nomEvent,descripcion,lugar,modalidad,MedioTransm,enlConexion,Presentador,direccion,fech_Ini,hora_Ini,fech_Fin,hora_Fin,intLucro,costo,aforo,totalVendidos,PlazasDisponibles,ubicacion,categoria,estado,img,numLikes) values ('EVPR3349',53170834,'','If only people would give meditation a real try, theyd experience directly for themselves how its an absolute game-changer in life and in career. After all, many of the most successful people on the planet, from athletes to CEOs, meditate regularly. Then, there are all of the MRI studies that show how the brain becomes neuro-plastic, which means it physically changes ','Cartagena','Presencial','','','nicolas marquez','carrera 8 #15ª-19, Santo Domingo','2022-05-15','17:00','2022-05-17','15:00','Pago',2206,90,78,12,'','CTG0006','Disponible','2j409.img',9);
+insert into EVENTOS (idEventos,idOrganizador,nomEvent,descripcion,lugar,modalidad,MedioTransm,enlConexion,Presentador,direccion,fech_Ini,hora_Ini,fech_Fin,hora_Fin,intLucro,costo,aforo,totalVendidos,PlazasDisponibles,ubicacion,categoria,estado,img,numLikes) values ('EVPR3350',53170834,'','DevTernity is the top international software developer conference. Turning developers into architects and engineering leaders since 2015.','Cartagena','Presencial','','','el propio','Calle 25 # 6-08 los martires','2022-05-16','17:00','2022-05-18','16:00','Pago',7187,290,141,149,'','CTG0007','Disponible','23x09.img',4);
+insert into EVENTOS (idEventos,idOrganizador,nomEvent,descripcion,lugar,modalidad,MedioTransm,enlConexion,Presentador,direccion,fech_Ini,hora_Ini,fech_Fin,hora_Fin,intLucro,costo,aforo,totalVendidos,PlazasDisponibles,ubicacion,categoria,estado,img,numLikes) values ('EVPR3351',87246681,'','Ganador del Reallity de televisión Shark Tank Colombia del canal Sony Latinoamérica en el 2018. Alumni Sabana. Administrador de Empresas y Músico, Especialista en Finanzas y mercado de capitales y Especialista en Gerencia de empresas de la industria de la música. Master en Creación y Dirección de empresas de la Universidad de Nebrija, España. Con experiencia de 7 años como corredor de bolsa certificado por la BVC y desde el año 2013 fundador y director de la empresa MUYSK SAS con la que se han obtenido diversos reconocimientos públicos y privados en emprendimiento e innovación. Desde 2015 comparte sus experiencias como docente de pregrado y posgrado, consultor y conferencista en Emprendimiento, Gerencia estratégica, Finanzas, Creatividad, Innovación, Liderazgo y Gestión Cultural.','Barranquilla','Presencial','','','Fabian Villarreal','cll 23 esquina # 24 -35','2022-05-17','14:00','2022-05-19','17:00','Libre',0,300,100,200,'','CTG0002','Disponible','20409.img',1);
+
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0001','EVPR3345',42870562,1,6248);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0002','EVPR3345',75076432,1,6248);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0003','EVPR3345',10537683,3,18744);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0004','EVPR3345',76288230,1,6248);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0005','EVPR3345',76317155,2,12496);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0006','EVPR3345',10536636,1,6248);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0007','EVPR3345',41733718,4,24992);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0008','EVPR3345',4613691,1,6248);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0009','EVPR3346',10545657,1,5746);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0010','EVPR3346',10529900,1,5746);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0011','EVPR3346',10527966,3,17238);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0012','EVVR3347',10533149,1,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0013','EVVR3347',18125465,2,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0014','EVVR3347',10541455,1,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0015','EVVR3347',48600072,1,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0016','EVPR3348',41573309,1,6429);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0017','EVPR3348',31213007,3,19287);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0018','EVPR3348',16738295,1,6429);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0019','EVPR3348',6760943,1,6429);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0020','EVPR3349',10533156,1,2206);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0021','EVPR3349',87246681,1,2206);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0022','EVPR3349',12976097,1,2206);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0023','EVPR3349',34564081,2,4412);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0024','EVPR3349',10548116,1,2206);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0025','EVPR3349',45766496,1,2206);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0026','EVPR3350',31946378,2,14374);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0027','EVPR3350',10545987,1,7187);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0028','EVPR3350',34531233,1,7187);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0029','EVPR3350',10525832,1,7187);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0030','EVPR3351',4611335,1,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0031','EVPR3351',41640024,1,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0032','EVPR3351',10295280,3,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0033','EVPR3351',34537236,1,0);
+insert into COMPRASTICKETS (idCompras,idEvento,comprador,cant,total) values ('trans0034','EVPR3351',34570500,2,0);
+
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR001','trans0001','QR001.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR002','trans0002','QR002.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR003','trans0003','QR003.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR004','trans0003','QR004.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR005','trans0003','QR005.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR006','trans0004','QR006.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR007','trans0005','QR007.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR008','trans0005','QR008.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR009','trans0006','QR009.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR010','trans0007','QR010.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR011','trans0007','QR011.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR012','trans0007','QR012.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR013','trans0007','QR013.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR014','trans0008','QR014.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR015','trans0009','QR015.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR016','trans0010','QR016.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR017','trans0011','QR017.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR018','trans0011','QR018.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR019','trans0011','QR019.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR020','trans0012','QR020.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR021','trans0013','QR021.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR022','trans0013','QR022.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR023','trans0014','QR023.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR024','trans0015','QR024.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR025','trans0016','QR025.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR026','trans0017','QR026.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR027','trans0017','QR027.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR028','trans0017','QR028.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR029','trans0018','QR029.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR030','trans0019','QR030.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR031','trans0020','QR031.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR032','trans0021','QR032.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR033','trans0022','QR033.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR034','trans0023','QR034.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR035','trans0023','QR035.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR036','trans0024','QR036.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR037','trans0025','QR037.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR038','trans0026','QR038.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR039','trans0026','QR039.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR040','trans0027','QR040.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR041','trans0028','QR041.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR042','trans0029','QR042.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR043','trans0030','QR043.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR044','trans0031','QR044.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR045','trans0032','QR045.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR046','trans0032','QR046.SVG','1');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR047','trans0032','QR047.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR048','trans0033','QR048.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR049','trans0034','QR049.SVG','0');
+insert into QRASISTENCIA (idQr,transaccion,qr,asistencia) values ('QR050','trans0034','QR050.SVG','0');
+
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT001','QR001','1','estuvo muy didactico y educativo',3);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT002','QR009','1','interesante la ponencia',4);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT003','QR010','0','Lenguaje demasiado tecnico, fue mucho para mi',null);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT004','QR013','0','Muchos problemas con el audio',null);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT005','QR014','1','expositor muy bien preparado',7);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT006','QR015','1','estuvo una chimba',23);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT007','QR018','1','el concierto estuvo d elo mejorcito',56);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT008','QR022','1','puede ser mucho más ágil la entrada al complejo implementando diligentemente tecnologías de punta',3);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT009','QR024','1','Zona conocida, concurrida e importante',4);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT010','QR027','0','',null);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT011','QR028','0','',null);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT012','QR029','0','deben mejorar o ampliar los parqueaderos cercanos y vías de acceso.',null);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT013','QR031','1','Buen servicio, aunque había mucha fila fue rápido el ingreso',5);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT014','QR033','1','cuenta con 8 pabellones de gran capacidad',0);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT015','QR035','1','Las áreas bastante limpias y bien organizado.',0);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT016','QR038','0','cobren tanto dinero por entrar',null);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT017','QR042','0','habían muchas personas y muy poca logística para la organización',null);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT018','QR043','','exelente',1);
+insert into INTERACCIONES (idInteraccion,qrAsistente,likeDisl,comentarios,compartidos) values ('INT019','QR046','','muy bueno',2);
+
+--CREATE-----------------------------
+if OBJECT_ID('nuevoUsuario') is not null
+drop procedure nuevoUsuario
+go
+create procedure nuevoUsuario
+@idUsuario int,
+@nombres nvarchar(30),
+@apellidos nvarchar(30),
+@usuario varchar(30),
+@pass varchar(10),
+@edad int,
+@correo varchar(30),
+@rol varchar(20) = 'regular',
+@politicaData char(1) = '1',
+@noSeguidos int = '',
+@razonSocial nvarchar (30),
+@noSeguidores int = ''
+	as
+	insert into USUARIOS (idUsuario,nombres,apellidos,usuario,pass,edad,correo,rol,politicaData,noSeguidos,razonSocial,noSeguidores) 
+	values (@idUsuario,@nombres,@apellidos,@usuario,@pass,@edad,@correo,@rol,@politicaData,@noSeguidos,@razonSocial,@noSeguidores);
+go
+
+exec nuevoUsuario 1000000,'pepito','perez','pepito2022','qwerty',20,'pepito@gmail.com','regular','1',0,'pepito C.I.A',0
+
+select * from USUARIOS
+
+--DELETE-----------------------------
+
+if OBJECT_ID('eliminarCuenta') is not null
+	drop procedure eliminarCuenta
+go
+create procedure eliminarCuenta
+@noIdentif int
+	as
+	delete from USUARIOS
+	where idUsuario = @noIdentif
+go
+exec eliminarCuenta 1000000
 
 
-create table Empleados(
-DNI varchar (8) primary key,
-Nombre varchar (100),
-Apellidos varchar (255),
-Departamento int,
-foreign key (Departamento) references Departamentos (Cod_Dep));
+--READ-------------------------------
+
+if OBJECT_ID('numSeguidores') is not null
+	drop procedure numSeguidores
+go
+create procedure numSeguidores
+@o int
+	as
+	select count (*) as numSeguidores from SEGUIMIENTO
+	group by seguido having seguido = @o
+
+go
+
+exec numSeguidores 76324843
+
+--CREATE, UPDATE-------------------------------
 
 
-insert into Departamentos (Cod_Dep,Nombre,Presupuesto)
-values 
+if OBJECT_ID('seguirUsuario') is not null
+	drop procedure seguirUsuario
+go
+create procedure seguirUsuario
+ @usuarioAseguir int,
+ @seguidorActivo int
+as
+	insert into SEGUIMIENTO (seguido,seguidor) values (@usuarioAseguir,@seguidorActivo);
+	update USUARIOS set noSeguidos = noSeguidos+1
+	where idUsuario = @seguidorActivo;
+	update USUARIOS set noSeguidores = noSeguidores+1
+	where idUsuario = @usuarioAseguir;
+go
 
-('01','Ventas','2000000'),
-('02','Administracion','1000000'),
-('03','Financiero','5000000'),
-('04','Recursos humanos','1000000'),
-('05','Investigacion','2000000'),
-('06','Compras','1000000'),
-('07','Recursos humanos','2000000'),
-('08','Ventas','1000000'),
-('09','Financiero','2000000'),
-('10','Compras','16000000');
-
-insert into Empleados(DNI,Nombre,Apellidos,Departamento)
-values 
-
-('11205559','Cristian', 'ryder','03'),
-('70053391','Julio',' lopez','09'),
-('52954700','Keren',' Gomez','06'),
-('10648579','Andres ',' Pooh','02'),
-('86958645','Ana',' Pineda','01'),
-('14657803','Luisa',' Linares','05'),
-('36054310','Mario',' Garcia','10'),
-('25648351','Jose',' Saul','04'),
-('12550474','Sonia',' Gavilan','07'),
-('12598844','Laura',' Murcia','01'),
-('34568714','Marly',' Mora','08');
-
-SELECT Apellidos
-FROM Empleados;
-
+select idUsuario, noSeguidos, noSeguidores from USUARIOS
+exec seguirUsuario 34570500,42870562
+select idUsuario, noSeguidos, noSeguidores from USUARIOS
 
